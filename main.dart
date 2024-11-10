@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'detailPage.dart';
 void main() => runApp(MaterialApp(
   home: MyHome(),
 
@@ -61,7 +62,23 @@ class HomeState extends State<MyHome>{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for(var subject in subjects)
-            Container(
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => DetailPage(
+                  subjectName: subject['subjectName'],
+                  totalClasses: subject['totalClasses'],
+                  attendedClasses: subject['attendedClasses'],
+                  missedClasses: subject['missedClasses'],
+
+                ),
+                ),
+                );
+    },
+
+            child: Container(
               width: double.infinity,
               padding: EdgeInsets.all(20),
               margin: EdgeInsets.symmetric(horizontal: 20,vertical:10),
@@ -83,15 +100,15 @@ class HomeState extends State<MyHome>{
                   ),
                   SizedBox(height:10),
                   Text(
-                    'Total Classes: ${subject['totalClasses']}',
+                    '${subject['totalClasses']}  Total',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   Text(
-                    'Classes Attended: ${subject['totalClasses']}',
+                    '${subject['attendedClasses']}  Attended',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   Text(
-                    'Classes Missed: ${subject['attendedClasses']}',
+                    '${subject['missedClasses']}  Missed',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
@@ -129,6 +146,7 @@ class HomeState extends State<MyHome>{
         ],
       ),
       ),
+            ),
      ],
     ),
     ),
