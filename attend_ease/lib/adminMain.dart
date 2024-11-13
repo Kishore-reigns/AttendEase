@@ -35,14 +35,13 @@ class HomeState extends State<MyHome> {
             )),
         centerTitle: true,
         backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add, color: Colors.white),
-            onPressed: () => addSub(),
-          ),
-        ],
       ),
       backgroundColor: Colors.black,
+      floatingActionButton: FloatingActionButton(
+        onPressed: addSub,
+        backgroundColor: Colors.blue, // Adjust color as needed
+        child: Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
