@@ -7,7 +7,7 @@ class DetailPage extends StatelessWidget {
   final int attendedClasses;
   final int missedClasses;
 
-  DetailPage({
+  const DetailPage({super.key, 
     required this.subjectName,
     required this.totalClasses,
     required this.attendedClasses,
@@ -27,7 +27,7 @@ class DetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           subjectName,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
@@ -35,35 +35,35 @@ class DetailPage extends StatelessWidget {
       ),
       backgroundColor: Colors.black,
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Total Classes: $totalClasses',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             Text(
               'Classes Attended: $attendedClasses',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             Text(
               'Classes Missed: $missedClasses',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             Text(
               'Attendance Percentage: ${calculateAttendancePercentage(attendedClasses, totalClasses).toStringAsFixed(1)}%',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Class Attendance Calendar:',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             SizedBox(
               width: 120,
               height: 120,
@@ -86,7 +86,7 @@ class DetailPage extends StatelessWidget {
                   Center(
                     child: Text(
                       '${calculateAttendancePercentage(attendedClasses, totalClasses).toStringAsFixed(1)}%',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -96,12 +96,12 @@ class DetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TableCalendar(
               firstDay: firstDay,
               lastDay: lastDay,
               focusedDay: focusedDay,
-              headerStyle: HeaderStyle(
+              headerStyle: const HeaderStyle(
                 formatButtonVisible: false, // Hides the format button
                 titleTextStyle: TextStyle(
                   color: Colors.blueAccent, // Color for the month and year text
@@ -118,7 +118,7 @@ class DetailPage extends StatelessWidget {
                 ),
                 titleCentered: true, // Centers the month/year text
               ),
-              calendarStyle: CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 todayDecoration: BoxDecoration(
                   color: Colors.blue, // Color for today's date
                   shape: BoxShape.circle,
@@ -135,7 +135,7 @@ class DetailPage extends StatelessWidget {
                 holidayTextStyle:
                     TextStyle(color: Colors.orange), // Color for holiday dates
               ),
-              daysOfWeekStyle: DaysOfWeekStyle(
+              daysOfWeekStyle: const DaysOfWeekStyle(
                 weekendStyle:
                     TextStyle(color: Colors.yellow), // Color for weekend labels
                 weekdayStyle:

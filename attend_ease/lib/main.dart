@@ -6,6 +6,9 @@ void main() => runApp(MaterialApp(
     ));
 
 class MyHome extends StatefulWidget {
+  const MyHome({super.key});
+
+  @override
   HomeState createState() => HomeState();
 }
 
@@ -50,7 +53,7 @@ class HomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Attendance",
+        title: const Text("Attendance",
             style: TextStyle(
               color: Colors.white,
             )),
@@ -79,8 +82,8 @@ class HomeState extends State<MyHome> {
                 },
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(20),
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(10),
@@ -96,23 +99,23 @@ class HomeState extends State<MyHome> {
                             Text(
                               'Subject: ${subject['subjectName']}',
                               style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
+                                  const TextStyle(fontSize: 18, color: Colors.white),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Text(
                               '${subject['totalClasses']}  Total',
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                                  const TextStyle(fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               '${subject['attendedClasses']}  Attended',
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                                  const TextStyle(fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               '${subject['missedClasses']}  Missed',
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                                  const TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -141,7 +144,7 @@ class HomeState extends State<MyHome> {
                             Center(
                               child: Text(
                                 '${calculateAttendancePercentage(subject['attendedClasses'], subject['totalClasses']).toStringAsFixed(1)}%',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
