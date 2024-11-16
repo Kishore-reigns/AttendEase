@@ -4,9 +4,12 @@ import 'detailPage.dart';
 void main() => runApp((const MyHome()));
 
 class MyHome extends StatefulWidget {
-  const MyHome({super.key});
+  
 
   @override
+  const MyHome({super.key});
+
+  
   HomeState createState() => HomeState();
 }
 
@@ -52,6 +55,7 @@ class HomeState extends State<MyHome> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Attendance",
+        title: const Text("Attendance",
             style: TextStyle(
               color: Colors.white,
             )),
@@ -81,8 +85,7 @@ class HomeState extends State<MyHome> {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(10),
@@ -97,24 +100,24 @@ class HomeState extends State<MyHome> {
                           children: [
                             Text(
                               'Subject: ${subject['subjectName']}',
-                              style: const TextStyle(
-                                  fontSize: 18, color: Colors.white),
+                              style:
+                                  const TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             const SizedBox(height: 10),
                             Text(
                               '${subject['totalClasses']}  Total',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              style:
+                                  const TextStyle(fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               '${subject['attendedClasses']}  Attended',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              style:
+                                  const TextStyle(fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               '${subject['missedClasses']}  Missed',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              style:
+                                  const TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
