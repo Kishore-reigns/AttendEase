@@ -5,8 +5,6 @@ void main() => runApp(const MaterialApp(
     ));
 
 class MyHome extends StatefulWidget {
-  const MyHome({super.key});
-
   @override
   const MyHome({super.key});
 
@@ -34,7 +32,7 @@ class HomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const const Text("Admin",
+        title: const Text("Admin",
             style: TextStyle(
               color: Colors.white,
             )),
@@ -45,7 +43,7 @@ class HomeState extends State<MyHome> {
       floatingActionButton: FloatingActionButton(
         onPressed: addSub,
         backgroundColor: Colors.blue, // Adjust color as needed
-        child: const const Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -66,7 +64,8 @@ class HomeState extends State<MyHome> {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
-                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(10),
@@ -80,24 +79,24 @@ class HomeState extends State<MyHome> {
                           children: [
                             Text(
                               'Subject: ${subject['subjectName']}',
-                              style:
-                                  const TextStyle(fontSize: 18, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 18, color: Colors.white),
                             ),
                             const SizedBox(height: 10),
                             Text(
                               'Year : ${subject['year']}',
-                              style:
-                                  const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               'Batch : ${subject['batch']}',
-                              style:
-                                  const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               'Total classes : ${subject['totalClasses']}',
-                              style:
-                                  const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
