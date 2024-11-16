@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'detailPage.dart';
 
-void main() => runApp(MaterialApp(
+void main() => runApp(const MaterialApp(
       home: MyHome(),
     ));
 
 class MyHome extends StatefulWidget {
+  const MyHome({super.key});
+
+  @override
   HomeState createState() => HomeState();
 }
 
@@ -29,7 +31,7 @@ class HomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Admin",
+        title: const Text("Admin",
             style: TextStyle(
               color: Colors.white,
             )),
@@ -40,7 +42,7 @@ class HomeState extends State<MyHome> {
       floatingActionButton: FloatingActionButton(
         onPressed: addSub,
         backgroundColor: Colors.blue, // Adjust color as needed
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -60,8 +62,9 @@ class HomeState extends State<MyHome> {
                 },
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(20),
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.all(20),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(10),
@@ -75,24 +78,24 @@ class HomeState extends State<MyHome> {
                           children: [
                             Text(
                               'Subject: ${subject['subjectName']}',
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 18, color: Colors.white),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Text(
                               'Year : ${subject['year']}',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               'Batch : ${subject['batch']}',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                             Text(
                               'Total classes : ${subject['totalClasses']}',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -117,32 +120,32 @@ class HomeState extends State<MyHome> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add New Subject'),
+          title: const Text('Add New Subject'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Subject Name'),
+                decoration: const InputDecoration(labelText: 'Subject Name'),
                 onChanged: (value) {
                   subjectName = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Year'),
+                decoration: const InputDecoration(labelText: 'Year'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   year = int.tryParse(value) ?? 1;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Batch'),
+                decoration: const InputDecoration(labelText: 'Batch'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   batch = int.tryParse(value) ?? 1;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Total Classes'),
+                decoration: const InputDecoration(labelText: 'Total Classes'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   totalClasses = int.tryParse(value) ?? 0;
@@ -155,7 +158,7 @@ class HomeState extends State<MyHome> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -169,7 +172,7 @@ class HomeState extends State<MyHome> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );
