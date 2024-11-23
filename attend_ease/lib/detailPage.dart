@@ -7,18 +7,7 @@ class DetailPage extends StatelessWidget {
   final int attendedClasses;
   final int missedClasses;
 
-<<<<<<< Updated upstream
   const DetailPage({
-=======
-  Map<DateTime, List<String>> highlightedDates = {
-    DateTime(2023, 6, 1): ['Attended'],
-    DateTime(2023, 6, 5): ['Missed'],
-    DateTime(2023, 6, 10): ['Attended'],
-    DateTime(2023, 6, 15): ['Holiday'],
-  };
-
-  DetailPage({
->>>>>>> Stashed changes
     super.key,
     required this.subjectName,
     required this.totalClasses,
@@ -33,13 +22,13 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime firstDay = DateTime(2023, 1, 1);
-    final DateTime lastDay = DateTime(2023, 12, 31);
-    final DateTime focusedDay = DateTime(2023, 6, 1);
-
+    final DateTime lastDay = DateTime(2025, 12, 31);
+    final DateTime focusedDay = DateTime.timestamp();
     return Scaffold(
       appBar: AppBar(
         title: Text(
           subjectName,
+          textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,
           ),
@@ -114,39 +103,6 @@ class DetailPage extends StatelessWidget {
               firstDay: firstDay,
               lastDay: lastDay,
               focusedDay: focusedDay,
-              calendarBuilders: CalendarBuilders(
-                // Custom builder for the day cell
-                defaultBuilder: (context, date, focusedDay) {
-                  DateTime normalizedDate =
-                      DateTime(date.year, date.month, date.day);
-                  if (highlightedDates.containsKey(normalizedDate)) {
-                    return Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.green, // Highlight color for the number
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        '${date.day}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  }
-                  return Center(
-                    child: Text(
-                      '${date.day}',
-                      style: const TextStyle(
-                        fontSize:
-                            16, // Ensure the regular date size remains unchanged
-                        color: Colors.white,
-                      ),
-                    ),
-                  );
-                },
-              ),
               headerStyle: const HeaderStyle(
                 formatButtonVisible: false, // Hides the format button
                 titleTextStyle: TextStyle(
@@ -180,8 +136,6 @@ class DetailPage extends StatelessWidget {
                 outsideDaysVisible: false,
                 holidayTextStyle:
                     TextStyle(color: Colors.orange), // Color for holiday dates
-
-                markerSizeScale: 0.4,
               ),
               daysOfWeekStyle: const DaysOfWeekStyle(
                 weekendStyle:
