@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'detailPage.dart';
 
 void main() => runApp(MaterialApp(
-      home: MyHome(),
-    ));
+  home: MyHome(),
+));
 
 class MyHome extends StatefulWidget {
   const MyHome({super.key});
@@ -83,99 +83,125 @@ class HomeState extends State<MyHome> {
                 },
                 child: Container(
                   width: double.infinity,
+                  height: 180,
                   padding: const EdgeInsets.all(20),
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[700], // Improved box background color
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Stack(
                     children: [
-                      // Text Information
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Subject: ${subject['subjectName']}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white, // High contrast text
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '${subject['totalClasses']} Total',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[300], // Softer white
-                              ),
-                            ),
-                            Text(
-                              '${subject['attendedClasses']} Attended',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Text(
-                              '${subject['missedClasses']} Missed',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                          ],
+                       Transform.translate(
+                         offset: Offset(280,-10),
+                       child: IconButton(
+                          alignment: Alignment.topRight,
+                          onPressed: () {
+                            showReomve(context, subject, (subjectToRemove) {
+                              setState(() {
+                                subjects.remove(subjectToRemove);
+                              });
+                            });
+                          },
+                          icon: const Icon(Icons.delete, color: Colors.white),
                         ),
                       ),
-                      SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            CircularProgressIndicator(
-                              value: calculateAttendancePercentage(
+
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Text Information
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Subject: ${subject['subjectName']}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white, // High contrast text
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  '${subject['totalClasses']} Total',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[300], // Softer white
+                                  ),
+                                ),
+                                Text(
+                                  '${subject['attendedClasses']} Attended',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[300],
+                                  ),
+                                ),
+                                Text(
+                                  '${subject['missedClasses']} Missed',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[300],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Circular Progress Bar on the right
+                          SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                CircularProgressIndicator(
+                                  value: calculateAttendancePercentage(
                                       subject['attendedClasses'],
                                       subject['totalClasses']) /
-                                  100,
-                              strokeWidth: 6,
-                              backgroundColor: Colors.grey[400],
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                getColorBasedOnPercentage(
-                                  calculateAttendancePercentage(
-                                      subject['attendedClasses'],
-                                      subject['totalClasses']),
+                                      100,
+                                  strokeWidth: 8,
+                                  backgroundColor: Colors.grey[400],
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    getColorBasedOnPercentage(
+                                      calculateAttendancePercentage(
+                                          subject['attendedClasses'],
+                                          subject['totalClasses']),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Center(
-                              child: Text(
-                                '${calculateAttendancePercentage(subject['attendedClasses'], subject['totalClasses']).toStringAsFixed(1)}%',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                Center(
+                                  child: Text(
+                                    '${calculateAttendancePercentage(subject['attendedClasses'], subject['totalClasses']).toStringAsFixed(1)}%',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      IconButton(
-                        alignment: Alignment.topRight,
-                        onPressed: () {
-                          showReomve(context, subject, (subjectToRemove) {
-                            setState(() {
-                              subjects.remove(subjectToRemove);
-                            });
-                          });
-                        },
-                        icon: const Icon(Icons.delete, color: Colors.white),
-                      ),
+                      // Delete Icon on top right
+                      // Positioned(
+                      //   top: 0,
+                      //   right: 0,
+                      //   child: IconButton(
+                      //     alignment: Alignment.center,
+                      //     onPressed: () {
+                      //       showReomve(context, subject, (subjectToRemove) {
+                      //         setState(() {
+                      //           subjects.remove(subjectToRemove);
+                      //         });
+                      //       });
+                      //     },
+                      //     icon: const Icon(Icons.delete,
+                      //         color: Colors.white),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -213,7 +239,7 @@ class HomeState extends State<MyHome> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor:
-              Colors.grey[850], // Dark but lighter dialog background
+          Colors.grey[850], // Dark but lighter dialog background
           title: const Text(
             "Add New Subject",
             style: TextStyle(color: Colors.white),
@@ -269,7 +295,7 @@ class HomeState extends State<MyHome> {
                 Navigator.pop(context);
               },
               child:
-                  const Text('Submit', style: TextStyle(color: Colors.white)),
+              const Text('Submit', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
