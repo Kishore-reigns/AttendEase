@@ -45,6 +45,7 @@ class HomeState extends State<MyHome> {
       'missedClasses': 2,
     },
   ];
+
   double calculateAttendancePercentage(int attend, int total) {
     return (attend / total) * 100;
   }
@@ -53,14 +54,14 @@ class HomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Attendance",
-            style: TextStyle(
-              color: Colors.white,
-            )),
+        title: const Text(
+          "Attendance",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[900], // Slightly lighter than black
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +87,7 @@ class HomeState extends State<MyHome> {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.grey[800],
+                    color: Colors.grey[700], // Improved box background color
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -100,23 +101,31 @@ class HomeState extends State<MyHome> {
                             Text(
                               'Subject: ${subject['subjectName']}',
                               style: const TextStyle(
-                                  fontSize: 18, color: Colors.white),
+                                fontSize: 18,
+                                color: Colors.white, // High contrast text
+                              ),
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              '${subject['totalClasses']}  Total',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              '${subject['totalClasses']} Total',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[300], // Softer white
+                              ),
                             ),
                             Text(
-                              '${subject['attendedClasses']}  Attended',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              '${subject['attendedClasses']} Attended',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[300],
+                              ),
                             ),
                             Text(
-                              '${subject['missedClasses']}  Missed',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              '${subject['missedClasses']} Missed',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[300],
+                              ),
                             ),
                           ],
                         ),
@@ -155,6 +164,18 @@ class HomeState extends State<MyHome> {
                           ],
                         ),
                       ),
+                      const SizedBox(height: 10),
+                      IconButton(
+                        alignment: Alignment.topRight,
+                        onPressed: () {
+                          showReomve(context, subject, (subjectToRemove) {
+                            setState(() {
+                              subjects.remove(subjectToRemove);
+                            });
+                          });
+                        },
+                        icon: const Icon(Icons.delete, color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -166,7 +187,7 @@ class HomeState extends State<MyHome> {
         onPressed: () {
           showAddSubjectDialog(context);
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.blue,
       ),
     );
@@ -182,7 +203,6 @@ class HomeState extends State<MyHome> {
     }
   }
 
-  // the below method is holds the functionality for showing dialog
   void showAddSubjectDialog(BuildContext context) {
     final TextEditingController subjectNameController = TextEditingController();
     final TextEditingController subjectCodeController = TextEditingController();
@@ -192,7 +212,8 @@ class HomeState extends State<MyHome> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.black,
+          backgroundColor:
+              Colors.grey[850], // Dark but lighter dialog background
           title: const Text(
             "Add New Subject",
             style: TextStyle(color: Colors.white),
@@ -203,25 +224,25 @@ class HomeState extends State<MyHome> {
               TextField(
                 controller: subjectNameController,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Subject Name',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: TextStyle(color: Colors.grey[300]),
                 ),
               ),
               TextField(
                 controller: subjectCodeController,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Subject Code',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: TextStyle(color: Colors.grey[300]),
                 ),
               ),
               TextField(
                 controller: totalHoursController,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Total Hours',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: TextStyle(color: Colors.grey[300]),
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -229,15 +250,13 @@ class HomeState extends State<MyHome> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                // Close the dialog without adding
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel',
+                    style: TextStyle(color: Colors.white))),
             TextButton(
               onPressed: () {
-                // Create a new subject and add it to the list
                 setState(() {
                   subjects.add({
                     'subjectName': subjectNameController.text,
@@ -247,15 +266,50 @@ class HomeState extends State<MyHome> {
                     'missedClasses': 0,
                   });
                 });
-
-                // Close the dialog after adding the new subject
                 Navigator.pop(context);
               },
-              child: const Text('Submit'),
+              child:
+                  const Text('Submit', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
       },
     );
   }
+}
+
+// Remove function with callback support
+void showReomve(BuildContext context, Map<String, dynamic> subject,
+    Function(Map<String, dynamic>) removeSubject) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.grey[850],
+        title: const Text(
+          "Remove Subject",
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Are you sure you want to remove this subject?',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          TextButton(
+            child: const Text("No", style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: const Text("Yes", style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              removeSubject(subject);
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
