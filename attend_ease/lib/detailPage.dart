@@ -7,10 +7,8 @@ class DetailPage extends StatelessWidget {
   final int attendedClasses;
   final int missedClasses;
 
-<<<<<<< Updated upstream
-  const DetailPage({
-=======
-  Map<DateTime, List<String>> highlightedDates = {
+  // You can keep or adjust this, depending on how you want to handle the dates
+  final Map<DateTime, List<String>> highlightedDates = {
     DateTime(2023, 6, 1): ['Attended'],
     DateTime(2023, 6, 5): ['Missed'],
     DateTime(2023, 6, 10): ['Attended'],
@@ -18,7 +16,6 @@ class DetailPage extends StatelessWidget {
   };
 
   DetailPage({
->>>>>>> Stashed changes
     super.key,
     required this.subjectName,
     required this.totalClasses,
