@@ -3,15 +3,15 @@ import 'package:table_calendar/table_calendar.dart';
 
 class Dummy extends StatefulWidget {
   final String subjectName;
-  final int totalClasses;
-  final int attendedClasses;
+  final int contactHours;
+  final int hoursAttended;
   final int missedClasses;
   DetailPage createState() => DetailPage();
 
   Dummy({
     required this.subjectName,
-    required this.totalClasses,
-    required this.attendedClasses,
+    required this.contactHours,
+    required this.hoursAttended,
     required this.missedClasses,
   });
 }
@@ -45,11 +45,11 @@ class DetailPage extends State<Dummy> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Total Classes: $widget.totalClasses',
+              'Total Classes: $widget.contactHours',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             Text(
-              'Classes Attended: $widget.attendedClasses',
+              'Classes Attended: $widget.hoursAttended',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             Text(
@@ -57,7 +57,7 @@ class DetailPage extends State<Dummy> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             Text(
-              'Attendance Percentage: ${calculateAttendancePercentage(widget.attendedClasses, widget.totalClasses).toStringAsFixed(1)}%',
+              'Attendance Percentage: ${calculateAttendancePercentage(widget.hoursAttended, widget.contactHours).toStringAsFixed(1)}%',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             SizedBox(height: 20),
@@ -78,20 +78,20 @@ class DetailPage extends State<Dummy> {
                   children: [
                     CircularProgressIndicator(
                       value: calculateAttendancePercentage(
-                              widget.attendedClasses, widget.totalClasses) /
+                              widget.hoursAttended, widget.contactHours) /
                           100,
                       strokeWidth: 6,
                       backgroundColor: Colors.grey[400],
                       valueColor: AlwaysStoppedAnimation<Color>(
                         getColorBasedOnPercentage(
                           calculateAttendancePercentage(
-                              widget.attendedClasses, widget.totalClasses),
+                              widget.hoursAttended, widget.contactHours),
                         ),
                       ),
                     ),
                     Center(
                       child: Text(
-                        '${calculateAttendancePercentage(widget.attendedClasses, widget.totalClasses).toStringAsFixed(1)}%',
+                        '${calculateAttendancePercentage(widget.hoursAttended, widget.contactHours).toStringAsFixed(1)}%',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

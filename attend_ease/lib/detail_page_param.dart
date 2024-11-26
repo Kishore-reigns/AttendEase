@@ -5,19 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SubDetailedPage_Param extends StatefulWidget {
-  final String subjectCode;
-  final String subjectName;
-  final int totalClasses;
-  final int attendedClasses;
-  final int missedClasses;
+  // final String subjectCode;
+  // final String subjectName;
+  // final int contactHours;
+  // final int hoursAttended;
+  // final int missedClasses;
 
+  Map<String, dynamic> subject;
   // Constructor for the StatefulWidget
   SubDetailedPage_Param({
-    required this.subjectCode,
-    required this.subjectName,
-    required this.totalClasses,
-    required this.attendedClasses,
-    required this.missedClasses,
+    required this.subject,
   });
 
   @override
@@ -39,12 +36,11 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
   //   DateTime(2024, 11, 15): ['Holiday'],
   // };
 
-
   final Map<DateTime, List<int>> highlightedDates = {
-    DateTime(2023, 6, 1): [5,6],   // ( Attended that day , Total that day )
-    DateTime(2023, 6, 5): [6,8],
-    DateTime(2023, 6, 10): [5,5],
-    DateTime(2024, 11, 15): [6,9],
+    DateTime(2023, 6, 1): [5, 6], // ( Attended that day , Total that day )
+    DateTime(2023, 6, 5): [6, 8],
+    DateTime(2023, 6, 10): [5, 5],
+    DateTime(2024, 11, 15): [6, 9],
   };
 
   @override
@@ -54,11 +50,12 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
   }
 
   double calculateAttendancePercentage() {
-    int totalAttended = highlightedDates.values.fold(0, (sum, value) => sum + value[0]);
-    int totalClasses = highlightedDates.values.fold(0, (sum, value) => sum + value[1]);
-    return totalClasses > 0 ? (totalAttended / totalClasses) * 100 : 0.0;
+    int totalAttended =
+        highlightedDates.values.fold(0, (sum, value) => sum + value[0]);
+    int contactHours =
+        highlightedDates.values.fold(0, (sum, value) => sum + value[1]);
+    return contactHours > 0 ? (totalAttended / contactHours) * 100 : 0.0;
   }
-
 
   Scaffold getFullBody(BuildContext context) {
     return Scaffold(
@@ -123,10 +120,11 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
   }
 
   void showAddClassDialog(BuildContext context) {
-    TextEditingController counterController = TextEditingController(text: counter.toString());
+    TextEditingController counterController =
+        TextEditingController(text: counter.toString());
     DateTime? selectedDate;
     String attendanceStatus = 'Attended'; // Default value
-    int attendedClasses = 0;
+    int hoursAttended = 0;
 
     showDialog(
       context: context,
@@ -160,7 +158,9 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       }
                     },
                     child: Text(
-                      selectedDate == null? 'Select Date':'${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}',
+                      selectedDate == null
+                          ? 'Select Date'
+                          : '${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}',
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -195,14 +195,14 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       ),
                     ],
                     onChanged: (value) {
-                      print("Onnum Panna Vendam if DropDown val Changed");
+                      // print("Onnum Panna Vendam if DropDown val Changed");
                       setDialogState(() {
                         attendanceStatus = value!;
-                        // int attendedClasses=0;
+                        // int hoursAttended=0;
                         // if (attendanceStatus == 'Attended') {
-                        //   attendedClasses = int.parse(counterController.text);
+                        //   hoursAttended = int.parse(counterController.text);
                         // }else if(attendanceStatus == 'Missed'){
-                        //   attendedClasses = 0;
+                        //   hoursAttended = 0;
                         // }
                       });
                     },
@@ -222,7 +222,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       // Show error message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Please select a date and number of classes'),
+                          content: Text(
+                              'Please select a date and number of classes'),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -232,20 +233,30 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                     if (attendanceStatus == 'Partially Attended') {
                       showPartialAttendanceDialog(context, (int attended) {
                         setState(() {
-                          int totalClasses= int.parse(counterController.text);
-                          print('For Partial setting as : ($attended,$totalClasses)');
-                          highlightedDates[selectedDate!] = [attended ,totalClasses];
+                          int contactHours = int.parse(counterController.text);
+                          print(
+                              'For Partial setting as : ($attended,$contactHours)');
+                          highlightedDates[selectedDate!] = [
+                            attended,
+                            contactHours
+                          ];
                         });
                         Navigator.of(context).pop();
                       });
-                    } else if(attendanceStatus == 'Attended') {
+                    } else if (attendanceStatus == 'Attended') {
                       setState(() {
-                        highlightedDates[selectedDate!] = [int.parse(counterController.text) ,int.parse(counterController.text)];
+                        highlightedDates[selectedDate!] = [
+                          int.parse(counterController.text),
+                          int.parse(counterController.text)
+                        ];
                       });
                       Navigator.of(context).pop();
-                    } else if(attendanceStatus == 'Missed') {
+                    } else if (attendanceStatus == 'Missed') {
                       setState(() {
-                        highlightedDates[selectedDate!] = [0 ,int.parse(counterController.text)];
+                        highlightedDates[selectedDate!] = [
+                          0,
+                          int.parse(counterController.text)
+                        ];
                         Navigator.of(context).pop();
                       });
                     }
@@ -261,7 +272,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
   }
 
   void showPartialAttendanceDialog(BuildContext context, Function(int) onSave) {
-    TextEditingController attendedCounterController = TextEditingController(text: '0');
+    TextEditingController attendedCounterController =
+        TextEditingController(text: '0');
 
     showDialog(
       context: context,
@@ -274,7 +286,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                 'Enter No. of Classes Attended',
                 style: TextStyle(color: Colors.white),
               ),
-              content: counterCreator(setDialogState, attendedCounterController),
+              content:
+                  counterCreator(setDialogState, attendedCounterController),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -284,11 +297,13 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    int attended = int.tryParse(attendedCounterController.text) ?? 0;
+                    int attended =
+                        int.tryParse(attendedCounterController.text) ?? 0;
                     if (attended <= 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Attended classes must be greater than 0'),
+                          content:
+                              Text('Attended classes must be greater than 0'),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -307,43 +322,43 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
     );
   }
 
-
-  void createPopUpJustForCount(context, attendedCounterController , selectedDate){
+  void createPopUpJustForCount(
+      context, attendedCounterController, selectedDate) {
     showDialog(
         context: context,
-        builder: (BuildContext context){
-          return StatefulBuilder(
-              builder: (context , setDialogState){
-                return AlertDialog(
-                  backgroundColor: foregroundColor,
-                  title: Text('No. of classes attended on ${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}'),
-                  content: Column(
-                    children: [
-                      counterCreator(setDialogState,attendedCounterController),
-                      const SizedBox(height: 10,),
-                    ]
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setDialogState) {
+            return AlertDialog(
+                backgroundColor: foregroundColor,
+                title: Text(
+                    'No. of classes attended on ${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}'),
+                content: Column(children: [
+                  counterCreator(setDialogState, attendedCounterController),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  actions: [
-                    TextButton(
-                        onPressed: (){
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Cancel',style: TextStyle(color: Colors.red),)
-                    ),
-                    ElevatedButton(
-                        onPressed: (){
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Add',style: TextStyle(color: Colors.white),)
-                    )
-                  ]
-                );
-              }
-          );
-        }
-    );
+                ]),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.red),
+                      )),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Add',
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ]);
+          });
+        });
   }
-
 
   void showRemoveClassDialog(BuildContext context) {
     List<DateTime> datesToRemove = highlightedDates.keys.toList();
@@ -355,11 +370,12 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: foregroundColor,
-              title: Text('Remove Class', style: TextStyle(color: Colors.white)),
+              title:
+                  Text('Remove Class', style: TextStyle(color: Colors.white)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ...datesToRemove.asMap().entries.map((entry){
+                  ...datesToRemove.asMap().entries.map((entry) {
                     int index = entry.key;
                     DateTime date = entry.value;
                     return CheckboxListTile(
@@ -409,9 +425,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
     );
   }
 
-
-
-  Row counterCreator(StateSetter setDialogState, TextEditingController counterController) {
+  Row counterCreator(
+      StateSetter setDialogState, TextEditingController counterController) {
     return Row(
       children: [
         IconButton(
@@ -437,8 +452,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
             onChanged: (value) {
               setDialogState(() {
                 counter = int.tryParse(value) ?? 0;
-                if(counter>30){
-                  counter=30;
+                if (counter > 30) {
+                  counter = 30;
                 }
               });
             },
@@ -446,21 +461,19 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          style: ButtonStyle(
-          ),
+          style: ButtonStyle(),
           onPressed: () {
             setDialogState(() {
               counter++;
-              if(counter>30){
-                counter=30;
+              if (counter > 30) {
+                counter = 30;
               }
               counterController.text = '$counter';
             });
-
           },
         ),
       ],
-      );
+    );
   }
 
   TableCalendar<dynamic> createCustomCalendar() {
@@ -474,9 +487,14 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
           if (highlightedDates.containsKey(normalizedDate)) {
             Color circleColor = Colors.green;
 
-            if(highlightedDates[normalizedDate]?[0]==0) circleColor = Colors.red;
-            else if (((highlightedDates[normalizedDate]?[0])! - (highlightedDates[normalizedDate]![1]))==0) circleColor=Colors.green;
-            else circleColor = Colors.orange;
+            if (highlightedDates[normalizedDate]?[0] == 0)
+              circleColor = Colors.red;
+            else if (((highlightedDates[normalizedDate]?[0])! -
+                    (highlightedDates[normalizedDate]![1])) ==
+                0)
+              circleColor = Colors.green;
+            else
+              circleColor = Colors.orange;
 
             return Container(
               alignment: Alignment.center,
@@ -486,7 +504,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
               ),
               child: Text(
                 '${date.day}',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
               ),
             );
           }
@@ -547,18 +566,18 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
             children: [
               CircularProgressIndicator(
                 value: calculateAttendancePercentage() / 100,
-                // value: calculateAttendancePercentage(widget.attendedClasses, widget.totalClasses) / 100,
+                // value: calculateAttendancePercentage(widget.hoursAttended, widget.contactHours) / 100,
                 strokeWidth: 6,
                 backgroundColor: Colors.grey[400],
                 valueColor: AlwaysStoppedAnimation<Color>(
                   getColorBasedOnPercentage(calculateAttendancePercentage()),
-                  // getColorBasedOnPercentage(calculateAttendancePercentage(widget.attendedClasses, widget.totalClasses)),
+                  // getColorBasedOnPercentage(calculateAttendancePercentage(widget.hoursAttended, widget.contactHours)),
                 ),
               ),
               Center(
                 child: Text(
                   '${calculateAttendancePercentage().toStringAsFixed(1)}%',
-                  // '${calculateAttendancePercentage(widget.attendedClasses, widget.totalClasses).toStringAsFixed(1)}%',
+                  // '${calculateAttendancePercentage(widget.hoursAttended, widget.contactHours).toStringAsFixed(1)}%',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -585,20 +604,20 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Subject Code: ${widget.subjectCode}',
-            style: TextStyle(fontSize: 20),
+            'Subject Code: ${widget.subject['subjectCode']}',
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           Text(
-            'Subject Name: ${widget.subjectName}',
-            style: TextStyle(fontSize: 20),
+            'Subject Name: ${widget.subject['subjectName']}',
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           Text(
-            'Classes Conducted: ${widget.totalClasses}',
-            style: TextStyle(fontSize: 20),
+            'Classes Conducted: ${widget.subject['contactHours']}',
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           Text(
-            'Classes Attended: ${widget.attendedClasses}',
-            style: TextStyle(fontSize: 20),
+            'Classes Attended: ${widget.subject['hoursAttended']}',
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           redTextBoxContainer('Classes Missed: '),
         ],
@@ -614,7 +633,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
-        '$textToFill${widget.missedClasses}',
+        '$textToFill${widget.subject['missedClasses']}',
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
     );
@@ -629,7 +648,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        '${widget.subjectName}',
+        '${widget.subject['subjectName']}',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.white,

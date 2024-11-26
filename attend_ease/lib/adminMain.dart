@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'HTTP_Request/Http_connector.dart';
 
 void main() => runApp(const MaterialApp(
       home: MyHome(),
@@ -13,23 +14,38 @@ class MyHome extends StatefulWidget {
 }
 
 class HomeState extends State<MyHome> {
+  HttpConnector conn = new HttpConnector();
+
+  late Map<String, dynamic> temp;
+
+  void func() {
+    conn.getStudentByRegNo('123456').then((studentData) {
+      temp = studentData;
+      print(temp);
+    });
+    // print(temp);
+    Future<Map<String, dynamic>> e = conn.getStudentByRegNo('123456');
+    print(e);
+  }
+
   final List<Map<String, dynamic>> subjects = [
     {
       'subjectName': 'Mathematics',
       'year': 2,
       'batch': 1,
-      'totalClasses': 50,
+      'contactHours': 50,
     },
     {
       'subjectName': 'OO',
       'year': 3,
       'batch': 1,
-      'totalClasses': 45,
+      'contactHours': 45,
     },
   ];
 
   @override
   Widget build(BuildContext context) {
+    func();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Admin",
@@ -94,7 +110,7 @@ class HomeState extends State<MyHome> {
                                   fontSize: 16, color: Colors.white),
                             ),
                             Text(
-                              'Total classes : ${subject['totalClasses']}',
+                              'Total classes : ${subject['contactHours']}',
                               style: const TextStyle(
                                   fontSize: 16, color: Colors.white),
                             ),
@@ -115,7 +131,7 @@ class HomeState extends State<MyHome> {
     String subjectName = '';
     int year = 1;
     int batch = 1;
-    int totalClasses = 0;
+    int contactHours = 0;
 
     showDialog(
       context: context,
@@ -149,7 +165,7 @@ class HomeState extends State<MyHome> {
                 decoration: const InputDecoration(labelText: 'Total Classes'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
-                  totalClasses = int.tryParse(value) ?? 0;
+                  contactHours = int.tryParse(value) ?? 0;
                 },
               ),
             ],
@@ -168,7 +184,7 @@ class HomeState extends State<MyHome> {
                     'subjectName': subjectName,
                     'year': year,
                     'batch': batch,
-                    'totalClasses': totalClasses,
+                    'contactHours': contactHours,
                   });
                 });
                 Navigator.of(context).pop();

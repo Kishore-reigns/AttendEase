@@ -1,11 +1,13 @@
+import 'package:attend_ease/HTTP_Request/Http_connector.dart';
 import 'package:attend_ease/detail_page_param.dart';
 import 'package:flutter/material.dart';
 // import 'detailPage.dart';
 import 'profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MaterialApp(
-  home: MyHome(),
-));
+      home: MyHome(),
+    ));
 
 class MyHome extends StatefulWidget {
   const MyHome({super.key});
@@ -15,38 +17,81 @@ class MyHome extends StatefulWidget {
 }
 
 class HomeState extends State<MyHome> {
-  final List<Map<String, dynamic>> subjects = [
-    {
-      'subjectName': 'Mathematics',
-      'totalClasses': 30,
-      'attendedClasses': 20,
-      'missedClasses': 10,
-    },
-    {
-      'subjectName': 'Physics',
-      'totalClasses': 25,
-      'attendedClasses': 18,
-      'missedClasses': 7,
-    },
-    {
-      'subjectName': 'Chemistry',
-      'totalClasses': 28,
-      'attendedClasses': 22,
-      'missedClasses': 6,
-    },
-    {
-      'subjectName': 'Biology',
-      'totalClasses': 32,
-      'attendedClasses': 10,
-      'missedClasses': 6,
-    },
-    {
-      'subjectName': 'English',
-      'totalClasses': 20,
-      'attendedClasses': 18,
-      'missedClasses': 2,
-    },
-  ];
+  int regno = 123456;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if the user has an active session
+    _checkSession();
+    super.initState();
+    subjects = initializeSubjects(); // Initialize subjects
+
+  }
+
+  // Check if the auth token exists in shared preferences
+  Future<void> _checkSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      // regno = prefs.getString('regno');
+    });
+  }
+
+  late Future<List<Map<String, dynamic>>> subjects;
+  
+  Future<List<Map<String, dynamic>>> initializeSubjects() async {
+    HttpConnector conn = HttpConnector();
+    try {
+      List<Map<String, dynamic>> subs = await conn.fetchStudentSubjects(regno.toString());
+
+      // Calculate missedClasses
+      for (var subject in subs) {
+        int contactHours = subject['contactHours'] ?? 0;
+        int hoursAttended = subject['hoursAttended'] ?? 0;
+        subject['missedClasses'] = contactHours - hoursAttended;
+      }
+
+      return subs; // Return the list
+    } catch (e) {
+      throw Exception('Failed to load subjects: $e');
+    }
+  }
+
+
+
+
+  // final List<Map<String, dynamic>> subjects = [
+  //   {
+  //     'subjectName': 'Mathematics',
+  //     'contactHours': 30,
+  //     'hoursAttended': 20,
+  //     'missedClasses': 10,
+  //   },
+  //   {
+  //     'subjectName': 'Physics',
+  //     'contactHours': 25,
+  //     'hoursAttended': 18,
+  //     'missedClasses': 7,
+  //   },
+  //   {
+  //     'subjectName': 'Chemistry',
+  //     'contactHours': 28,
+  //     'hoursAttended': 22,
+  //     'missedClasses': 6,
+  //   },
+  //   {
+  //     'subjectName': 'Biology',
+  //     'contactHours': 32,
+  //     'hoursAttended': 10,
+  //     'missedClasses': 6,
+  //   },
+  //   {
+  //     'subjectName': 'English',
+  //     'contactHours': 20,
+  //     'hoursAttended': 18,
+  //     'missedClasses': 2,
+  //   },
+  // ];
 
   double calculateAttendancePercentage(int attend, int total) {
     return (attend / total) * 100;
@@ -54,6 +99,7 @@ class HomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
+    initializeSubjects();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -85,11 +131,7 @@ class HomeState extends State<MyHome> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => SubDetailedPage_Param(
-                        subjectCode: '12312',
-                        subjectName: subject['subjectName'],
-                        totalClasses: subject['totalClasses'],
-                        attendedClasses: subject['attendedClasses'],
-                        missedClasses: subject['missedClasses'],
+                        subject: subject,
                       ),
                     ),
                   );
@@ -98,7 +140,7 @@ class HomeState extends State<MyHome> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   margin:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[700], // Improved box background color
                     borderRadius: BorderRadius.circular(15),
@@ -122,14 +164,14 @@ class HomeState extends State<MyHome> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  '${subject['totalClasses']} Total',
+                                  '${subject['contactHours']} Total',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey[300], // Softer white
                                   ),
                                 ),
                                 Text(
-                                  '${subject['attendedClasses']} Attended',
+                                  '${subject['hoursAttended']} Attended',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey[300],
@@ -146,11 +188,11 @@ class HomeState extends State<MyHome> {
                                   child: TextButton(
                                     onPressed: () {
                                       showReomve(context, subject,
-                                              (subjectToRemove) {
-                                            setState(() {
-                                              subjects.remove(subjectToRemove);
-                                            });
-                                          });
+                                          (subjectToRemove) {
+                                        setState(() {
+                                          subjects.remove(subjectToRemove);
+                                        });
+                                      });
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: Colors.red,
@@ -181,22 +223,22 @@ class HomeState extends State<MyHome> {
                               children: [
                                 CircularProgressIndicator(
                                   value: calculateAttendancePercentage(
-                                      subject['attendedClasses'],
-                                      subject['totalClasses']) /
+                                          subject['hoursAttended'],
+                                          subject['contactHours']) /
                                       100,
                                   strokeWidth: 10,
                                   backgroundColor: Colors.grey[400],
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     getColorBasedOnPercentage(
                                       calculateAttendancePercentage(
-                                          subject['attendedClasses'],
-                                          subject['totalClasses']),
+                                          subject['hoursAttended'],
+                                          subject['contactHours']),
                                     ),
                                   ),
                                 ),
                                 Center(
                                   child: Text(
-                                    '${calculateAttendancePercentage(subject['attendedClasses'], subject['totalClasses']).toStringAsFixed(1)}%',
+                                    '${calculateAttendancePercentage(subject['hoursAttended'], subject['contactHours']).toStringAsFixed(1)}%',
                                     style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
@@ -246,7 +288,7 @@ class HomeState extends State<MyHome> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor:
-          Colors.grey[850], // Dark but lighter dialog background
+              Colors.grey[850], // Dark but lighter dialog background
           title: const Text(
             "Add New Subject",
             style: TextStyle(color: Colors.white),
@@ -294,15 +336,15 @@ class HomeState extends State<MyHome> {
                   subjects.add({
                     'subjectName': subjectNameController.text,
                     'subjectCode': subjectCodeController.text,
-                    'totalClasses': int.parse(totalHoursController.text),
-                    'attendedClasses': 0,
+                    'contactHours': int.parse(totalHoursController.text),
+                    'hoursAttended': 0,
                     'missedClasses': 0,
                   });
                 });
                 Navigator.pop(context);
               },
               child:
-              const Text('Submit', style: TextStyle(color: Colors.white)),
+                  const Text('Submit', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -346,5 +388,3 @@ void showReomve(BuildContext context, Map<String, dynamic> subject,
     },
   );
 }
-
-
