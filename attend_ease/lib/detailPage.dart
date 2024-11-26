@@ -30,13 +30,13 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime firstDay = DateTime(2023, 1, 1);
-    final DateTime lastDay = DateTime(2025, 12, 31);
-    final DateTime focusedDay = DateTime.timestamp();
+    final DateTime lastDay = DateTime(2023, 12, 31);
+    final DateTime focusedDay = DateTime(2023, 6, 1);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           subjectName,
-          textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,
           ),
@@ -82,7 +82,7 @@ class DetailPage extends StatelessWidget {
                 children: [
                   CircularProgressIndicator(
                     value: calculateAttendancePercentage(
-                            attendedClasses, totalClasses) /
+                        attendedClasses, totalClasses) /
                         100,
                     strokeWidth: 6,
                     backgroundColor: Colors.grey[400],
@@ -111,6 +111,38 @@ class DetailPage extends StatelessWidget {
               firstDay: firstDay,
               lastDay: lastDay,
               focusedDay: focusedDay,
+              calendarBuilders: CalendarBuilders(
+                // Custom builder for the day cell
+                defaultBuilder: (context, date, focusedDay) {
+                  DateTime normalizedDate =
+                  DateTime(date.year, date.month, date.day);
+                  if (highlightedDates.containsKey(normalizedDate)) {
+                    return Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.green, // Highlight color for the number
+                        shape: BoxShape.circle,
+                      ),
+                        child: Text(
+                        '${date.day}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  }
+                  return Center(
+                    child: Text(
+                      '${date.day}',
+                      style: const TextStyle(
+                        fontSize: 16, // Ensure the regular date size remains unchanged
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              ),
               headerStyle: const HeaderStyle(
                 formatButtonVisible: false, // Hides the format button
                 titleTextStyle: TextStyle(
@@ -138,18 +170,20 @@ class DetailPage extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 weekendTextStyle:
-                    TextStyle(color: Colors.yellow), // Color for weekend dates
+                TextStyle(color: Colors.yellow), // Color for weekend dates
                 defaultTextStyle:
-                    TextStyle(color: Colors.white), // Color for regular dates
+                TextStyle(color: Colors.white), // Color for regular dates
                 outsideDaysVisible: false,
                 holidayTextStyle:
-                    TextStyle(color: Colors.orange), // Color for holiday dates
+                TextStyle(color: Colors.orange), // Color for holiday dates
+
+                markerSizeScale: 0.4,
               ),
               daysOfWeekStyle: const DaysOfWeekStyle(
                 weekendStyle:
-                    TextStyle(color: Colors.yellow), // Color for weekend labels
+                TextStyle(color: Colors.yellow), // Color for weekend labels
                 weekdayStyle:
-                    TextStyle(color: Colors.white), // Color for weekday labels
+                TextStyle(color: Colors.white), // Color for weekday labels
               ),
             ),
           ],

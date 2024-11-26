@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'detailPage.dart';
+import 'detail_page_param.dart';
 
 void main() => runApp(MaterialApp(
       home: MyHome(),
@@ -15,30 +16,35 @@ class MyHome extends StatefulWidget {
 class HomeState extends State<MyHome> {
   final List<Map<String, dynamic>> subjects = [
     {
-      'subjectName': 'Mathematics',
+      'subjectCode' : 'CS9999',
+      'subjectName' : 'Mathematics',
       'totalClasses': 30,
       'attendedClasses': 20,
       'missedClasses': 10,
     },
     {
+    'subjectCode' : 'CS9998',
       'subjectName': 'Physics',
       'totalClasses': 25,
       'attendedClasses': 18,
       'missedClasses': 7,
     },
     {
-      'subjectName': 'Chemistry',
+    'subjectCode' : 'CS9997',
+      'subjectName': 'Object Oriented Analysis and Design',
       'totalClasses': 28,
       'attendedClasses': 22,
       'missedClasses': 6,
     },
     {
+    'subjectCode' : 'CS9996',
       'subjectName': 'Biology',
       'totalClasses': 32,
       'attendedClasses': 10,
       'missedClasses': 6,
     },
     {
+    'subjectCode' : 'CS9995',
       'subjectName': 'English',
       'totalClasses': 20,
       'attendedClasses': 18,
@@ -72,7 +78,8 @@ class HomeState extends State<MyHome> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailPage(
+                      builder: (context) => SubDetailedPage_Param(
+                        subjectCode: subject['subjectCode'],
                         subjectName: subject['subjectName'],
                         totalClasses: subject['totalClasses'],
                         attendedClasses: subject['attendedClasses'],
@@ -131,8 +138,8 @@ class HomeState extends State<MyHome> {
                         ),
                       ),
                       SizedBox(
-                        width: 60,
-                        height: 60,
+                        width: 100,
+                        height: 100,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
@@ -155,7 +162,7 @@ class HomeState extends State<MyHome> {
                               child: Text(
                                 '${calculateAttendancePercentage(subject['attendedClasses'], subject['totalClasses']).toStringAsFixed(1)}%',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
@@ -195,11 +202,11 @@ class HomeState extends State<MyHome> {
 
   Color getColorBasedOnPercentage(double percentage) {
     if (percentage >= 75) {
-      return Colors.green;
+      return Color.fromRGBO(51, 255, 13,1);
     } else if (percentage >= 50) {
-      return Colors.orange;
+      return Color.fromRGBO(255, 176, 9,1);
     } else {
-      return Colors.red;
+      return Color.fromRGBO(255, 31, 31,1);
     }
   }
 
@@ -212,8 +219,7 @@ class HomeState extends State<MyHome> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor:
-              Colors.grey[850], // Dark but lighter dialog background
+          backgroundColor: Colors.grey[850], // Dark but lighter dialog background
           title: const Text(
             "Add New Subject",
             style: TextStyle(color: Colors.white),
