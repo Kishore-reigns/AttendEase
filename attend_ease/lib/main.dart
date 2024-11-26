@@ -1,6 +1,7 @@
+import 'package:attend_ease/detail_page_param.dart';
 import 'package:flutter/material.dart';
-import 'detailPage.dart';
-import 'detail_page_param.dart';
+// import 'detailPage.dart';
+import 'profile.dart';
 
 void main() => runApp(MaterialApp(
   home: MyHome(),
@@ -16,35 +17,30 @@ class MyHome extends StatefulWidget {
 class HomeState extends State<MyHome> {
   final List<Map<String, dynamic>> subjects = [
     {
-      'subjectCode' : 'CS9999',
-      'subjectName' : 'Mathematics',
+      'subjectName': 'Mathematics',
       'totalClasses': 30,
       'attendedClasses': 20,
       'missedClasses': 10,
     },
     {
-    'subjectCode' : 'CS9998',
       'subjectName': 'Physics',
       'totalClasses': 25,
       'attendedClasses': 18,
       'missedClasses': 7,
     },
     {
-    'subjectCode' : 'CS9997',
-      'subjectName': 'Object Oriented Analysis and Design',
+      'subjectName': 'Chemistry',
       'totalClasses': 28,
       'attendedClasses': 22,
       'missedClasses': 6,
     },
     {
-    'subjectCode' : 'CS9996',
       'subjectName': 'Biology',
       'totalClasses': 32,
       'attendedClasses': 10,
       'missedClasses': 6,
     },
     {
-    'subjectCode' : 'CS9995',
       'subjectName': 'English',
       'totalClasses': 20,
       'attendedClasses': 18,
@@ -66,6 +62,16 @@ class HomeState extends State<MyHome> {
         ),
         centerTitle: true,
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Profile()));
+            },
+            icon: Icon(Icons.man),
+            color: Colors.white,
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[900], // Slightly lighter than black
       body: SingleChildScrollView(
@@ -79,7 +85,7 @@ class HomeState extends State<MyHome> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => SubDetailedPage_Param(
-                        subjectCode: subject['subjectCode'],
+                        subjectCode: '12312',
                         subjectName: subject['subjectName'],
                         totalClasses: subject['totalClasses'],
                         attendedClasses: subject['attendedClasses'],
@@ -90,7 +96,6 @@ class HomeState extends State<MyHome> {
                 },
                 child: Container(
                   width: double.infinity,
-                  height: 180,
                   padding: const EdgeInsets.all(20),
                   margin:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -100,28 +105,6 @@ class HomeState extends State<MyHome> {
                   ),
                   child: Stack(
                     children: [
-
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: IconButton(
-
-                       Transform.translate(
-                         offset: Offset(280,-10),
-                       child: IconButton(
-
-                          alignment: Alignment.topRight,
-                          onPressed: () {
-                            showReomve(context, subject, (subjectToRemove) {
-                              setState(() {
-                                subjects.remove(subjectToRemove);
-                              });
-                            });
-                          },
-                          icon: const Icon(Icons.delete, color: Colors.white),
-                        ),
-
-                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -159,84 +142,31 @@ class HomeState extends State<MyHome> {
                                     color: Colors.grey[300],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          // Circular Progress Bar on the right
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                CircularProgressIndicator(
-                                  value: calculateAttendancePercentage(
-                                          subject['attendedClasses'],
-                                          subject['totalClasses']) /
-                                      100,
-                                  strokeWidth: 8,
-                                  backgroundColor: Colors.grey[400],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    getColorBasedOnPercentage(
-                                      calculateAttendancePercentage(
-                                          subject['attendedClasses'],
-                                          subject['totalClasses']),
+                                Positioned(
+                                  child: TextButton(
+                                    onPressed: () {
+                                      showReomve(context, subject,
+                                              (subjectToRemove) {
+                                            setState(() {
+                                              subjects.remove(subjectToRemove);
+                                            });
+                                          });
+                                    },
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 30, vertical: 1),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    '${calculateAttendancePercentage(subject['attendedClasses'], subject['totalClasses']).toStringAsFixed(1)}%',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                    child: const Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      ),
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Text Information
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Subject: ${subject['subjectName']}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white, // High contrast text
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '${subject['totalClasses']} Total',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[300], // Softer white
-                                  ),
-                                ),
-                                Text(
-                                  '${subject['attendedClasses']} Attended',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[300],
-                                  ),
-                                ),
-                                Text(
-                                  '${subject['missedClasses']} Missed',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[300],
                                   ),
                                 ),
                               ],
@@ -244,8 +174,8 @@ class HomeState extends State<MyHome> {
                           ),
                           // Circular Progress Bar on the right
                           SizedBox(
-                            width: 60,
-                            height: 60,
+                            width: 100,
+                            height: 100,
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
@@ -254,7 +184,7 @@ class HomeState extends State<MyHome> {
                                       subject['attendedClasses'],
                                       subject['totalClasses']) /
                                       100,
-                                  strokeWidth: 8,
+                                  strokeWidth: 10,
                                   backgroundColor: Colors.grey[400],
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     getColorBasedOnPercentage(
@@ -279,24 +209,6 @@ class HomeState extends State<MyHome> {
                           ),
                         ],
                       ),
-
-                      // Delete Icon on top right
-                      // Positioned(
-                      //   top: 0,
-                      //   right: 0,
-                      //   child: IconButton(
-                      //     alignment: Alignment.center,
-                      //     onPressed: () {
-                      //       showReomve(context, subject, (subjectToRemove) {
-                      //         setState(() {
-                      //           subjects.remove(subjectToRemove);
-                      //         });
-                      //       });
-                      //     },
-                      //     icon: const Icon(Icons.delete,
-                      //         color: Colors.white),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -316,11 +228,11 @@ class HomeState extends State<MyHome> {
 
   Color getColorBasedOnPercentage(double percentage) {
     if (percentage >= 75) {
-      return Color.fromRGBO(51, 255, 13,1);
+      return Colors.green;
     } else if (percentage >= 50) {
-      return Color.fromRGBO(255, 176, 9,1);
+      return Colors.orange;
     } else {
-      return Color.fromRGBO(255, 31, 31,1);
+      return Colors.red;
     }
   }
 
@@ -434,3 +346,5 @@ void showReomve(BuildContext context, Map<String, dynamic> subject,
     },
   );
 }
+
+
