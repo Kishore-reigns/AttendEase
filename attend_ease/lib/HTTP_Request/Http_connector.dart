@@ -4,34 +4,6 @@ import 'package:http/http.dart' as http;
 class HttpConnector {
   final String baseUrl = 'http://localhost:6969/students';
 
-  Future<Map<String, dynamic>> registerStudent(
-     String regNo,
-     String name,
-     String password,
-  ) async {
-    final url = Uri.parse('$baseUrl/Student/register');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'regNo': regNo,
-          'name': name,
-          'password': password,
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
-      } else {
-        throw Exception('Failed to register student. HTTP Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error registering student: $e');
-    }
-  }
-
 
   Future<Map<String, dynamic>> getStudentByRegNo(String regNo) async {
     final url = Uri.parse('$baseUrl/Student/$regNo');

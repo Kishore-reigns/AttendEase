@@ -16,7 +16,7 @@ class MyHome extends StatefulWidget {
 }
 
 class HomeState extends State<MyHome> {
-  int regno = 123456;
+  String? regno ;
 
   @override
   void initState() {
@@ -28,6 +28,7 @@ class HomeState extends State<MyHome> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       // Initialize regno here if needed
+      regno = prefs.getString('registerNumber');
     });
   }
 
