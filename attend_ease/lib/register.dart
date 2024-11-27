@@ -26,15 +26,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
       try {
         // Send registration data to the server
-        final response = await _httpConnector.registerStudent(
+        final studentData = {
 
-          registerNumber,
-          username,
-          password,
-        );
+          'regno': registerNumber,
+          'studentName': username,
+          'password': password,
+        };
+        final response = await _httpConnector.createStudent(studentData);
 
         // Handle successful registration
-        if (response['status'] == 'success') {
+        // if (response['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registration Successful!')),
           );
@@ -46,12 +47,12 @@ class _RegisterPageState extends State<RegisterPage> {
               MaterialPageRoute(builder: (context) => const LoginPage()),
             );
           });
-        } else {
-          // Show error message if registration fails
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Registration failed: ${response['message']}')),
-          );
-        }
+        // } else {
+        //   // Show error message if registration fails
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(content: Text('Registration failed: ${response['message']}')),
+        //   );
+        // }
       } catch (e) {
         // Handle error if the server call fails
         ScaffoldMessenger.of(context).showSnackBar(

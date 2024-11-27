@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MaterialApp(
+void main() => runApp(const MaterialApp(
   home: MyHome(),
 ));
 
@@ -28,15 +28,22 @@ class HomeState extends State<MyHome> {
   Future<void> _checkSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+
       regno = prefs.getString('registerNumber');
+
     });
   }
 
   Future<void> _refreshSubjects() async {
     List<Map<String, dynamic>> updatedSubjects = await initializeSubjects();
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       // This will refresh the UI with the latest subjects
       // Any subjects added will now be displayed
+
+      // Initialize regno here if needed
+     // regno = prefs.getString('registerNumber');
+
     });
   }
 
@@ -75,9 +82,9 @@ class HomeState extends State<MyHome> {
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Profile()));
+                  context, MaterialPageRoute(builder: (context) => const Profile()));
             },
-            icon: Icon(Icons.man),
+            icon: const Icon(Icons.man),
             color: Colors.white,
           ),
         ],
@@ -219,8 +226,8 @@ class HomeState extends State<MyHome> {
         onPressed: () {
           showAddSubjectDialog(context);
         },
-        child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.blue,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

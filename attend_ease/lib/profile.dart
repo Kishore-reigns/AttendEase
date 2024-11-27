@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -7,22 +9,39 @@ class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
 }
+class _ProfileState extends State<Profile>{
 
-class _ProfileState extends State<Profile> {
-  String name = "Your Name";
+  String name  = "Your Name";
   String registerNumber = "2022503055";
-  String img = "https://img.lovepik.com/photo/48006/3554.jpg_wh300.jpg";
+  String img  =  "https://img.lovepik.com/photo/48006/3554.jpg_wh300.jpg";
   final ImagePicker _picker = ImagePicker();
-  void _editName() {
-    TextEditingController nameController = TextEditingController();
+
+  void _getSessionData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      registerNumber = prefs.getString('registerNumber')??"00000";
+    });
+  }
+  @override
+  void initState(){
+    super.initState();
+    _getSessionData();
+  }
+  void _editName(){
+    TextEditingController nameController = TextEditingController(text : name);
 
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
+
           title: const Text("Edit Name"),
           content: TextField(
             controller: nameController,
             decoration: const InputDecoration(hintText: "Enter new name"),
+
+
+
+
           ),
           actions: [
             TextButton(
@@ -30,8 +49,8 @@ class _ProfileState extends State<Profile> {
               child: const Text("Cancel"),
             ),
             ElevatedButton(
-              onPressed: () {
-                setState(() {
+              onPressed:(){
+                setState((){
                   name = nameController.text;
                 });
                 Navigator.pop(context);
@@ -39,12 +58,11 @@ class _ProfileState extends State<Profile> {
               child: const Text("Save"),
             ),
           ],
-        ));
+        )
+    );
   }
-
-  void _editRegisterNumber() {
-    TextEditingController registerController =
-    TextEditingController(text: registerNumber);
+  void _editRegisterNumber(){
+    TextEditingController registerController = TextEditingController(text: registerNumber);
 
     showDialog(
       context: context,
@@ -52,7 +70,12 @@ class _ProfileState extends State<Profile> {
         title: const Text("Edit Register Number"),
         content: TextField(
           controller: registerController,
+
           decoration: const InputDecoration(hintText: "Enter new register number"),
+
+
+
+
         ),
         actions: [
           TextButton(
@@ -61,10 +84,12 @@ class _ProfileState extends State<Profile> {
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
+              setState((){
                 registerNumber = registerController.text;
+
               });
               Navigator.pop(context);
+
             },
             child: const Text("Save"),
           ),
@@ -73,23 +98,34 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Future<void> _editProfilePicture() async {
-    try {
+  Future<void> _editProfilePicture() async{
+    try{
       final XFile? pickedFile = await _picker.pickImage(
         source: ImageSource.gallery,
-        maxHeight: 800,
+        maxHeight:800,
         maxWidth: 800,
       );
-      if (pickedFile != null) {
+      if(pickedFile != null){
         setState(() {
           img = pickedFile.path;
         });
       }
-    } catch (e) {
+    }
+    catch(e){
       print("Error picking image: $e");
     }
-  }
 
+  }
+  Future<void> _logout(BuildContext contex) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+          (route)=>false,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +146,8 @@ class _ProfileState extends State<Profile> {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(img),
+                backgroundImage: NetworkImage(
+                    img),
               ),
               const SizedBox(height: 20),
 
@@ -203,6 +240,31 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: ()=>_logout(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Text(
+                    'logout',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),
