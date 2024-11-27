@@ -5,6 +5,35 @@ class HttpConnector {
   //192.168.1.3
   final String baseUrl = 'http://192.168.1.3:6968/students';
 
+  Future<Map<String, dynamic>> registerStudent(
+     String regNo,
+     String name,
+     String password,
+  ) async {
+    final url = Uri.parse('$baseUrl/Student/register');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'regNo': regNo,
+          'name': name,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to register student. HTTP Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error registering student: $e');
+    }
+  }
+
+
   Future<Map<String, dynamic>> getStudentByRegNo(String regNo) async {
     final url = Uri.parse('$baseUrl/Student/$regNo');
 
@@ -168,4 +197,27 @@ class HttpConnector {
       throw Exception('Error fetching student subjects: $e');
     }
   }
+
+  Future<bool> validatePassword(String regno, Map<String, dynamic> student) async {
+    final url = Uri.parse('$baseUrl/Student/validateLogin/$regno');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(student),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error validating password: $e');
+      return false;
+    }
+  }
+
 }
