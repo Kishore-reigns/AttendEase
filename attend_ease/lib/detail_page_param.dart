@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'HTTP_Request/Http_connector.dart';
 
 class SubDetailedPage_Param extends StatefulWidget {
   // final String subjectCode;
@@ -363,6 +364,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
   void showRemoveClassDialog(BuildContext context) {
     List<DateTime> datesToRemove = highlightedDates.keys.toList();
     List<bool> selectedDates = List.filled(datesToRemove.length, false);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -370,8 +372,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: foregroundColor,
-              title:
-                  Text('Remove Class', style: TextStyle(color: Colors.white)),
+              title: Text('Remove Class', style: TextStyle(color: Colors.white)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -402,18 +403,56 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                   child: Text('Cancel', style: TextStyle(color: Colors.red)),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      for (int i = 0; i < selectedDates.length; i++) {
-                        if (selectedDates[i]) {
-                          // Remove selected dates
-                          highlightedDates.remove(datesToRemove[i]);
-                        }
+                  onPressed: () async {
+                    // Prepare the list of dates to be removed
+                    List<DateTime> selectedDatesToRemove = [];
+                    for (int i = 0; i < selectedDates.length; i++) {
+                      if (selectedDates[i]) {
+                        selectedDatesToRemove.add(datesToRemove[i]);
                       }
-                    });
-                    // Placeholder for database update
-                    print('Send removed dates to backend: $datesToRemove');
-                    Navigator.of(context).pop();
+                    }
+
+                    // Send the selected dates to the backend for removal
+                    if (selectedDatesToRemove.isNotEmpty) {
+                      try {
+                        // Call your HttpConnector method to remove the class from the backend
+                        HttpConnector connector = HttpConnector();
+
+                        // Assuming you have a method to remove the class by date
+                        for (DateTime date in selectedDatesToRemove) {
+                          // Construct a request payload if needed, e.g., for specific subject or student ID
+                          Map<String, dynamic> removeData = {
+                            "classDate": date.toIso8601String(),
+                            // Add more data fields as required
+                          };
+
+                          // Example API call to remove class
+                          await connector.addClassToSubject(
+                            'studentRegNo',  // Replace with actual student regNo
+                            'subjectCode',   // Replace with actual subject code
+                            date.toIso8601String(),
+                            removeData,
+                          );
+                        }
+
+                        // After successful update, remove from UI as well
+                        setState(() {
+                          for (int i = 0; i < selectedDates.length; i++) {
+                            if (selectedDates[i]) {
+                              highlightedDates.remove(datesToRemove[i]);
+                            }
+                          }
+                        });
+
+                        print('Removed selected dates from backend: $selectedDatesToRemove');
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        // Handle error if API call fails
+                        print('Error removing class: $e');
+                      }
+                    } else {
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: Text('Remove'),
                 ),

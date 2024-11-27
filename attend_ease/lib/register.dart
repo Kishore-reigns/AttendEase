@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login.dart'; // Import login page if needed
+import 'HTTP_Request/Http_connector.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -14,20 +15,49 @@ class _RegisterPageState extends State<RegisterPage> {
   final _registerNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final HttpConnector _httpConnector = HttpConnector();
 
-  void _register() {
+
+  void _register() async {
     if (_formKey.currentState!.validate()) {
-      // Perform the registration logic here
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration Successful!')),
-      );
+      final username = _usernameController.text.trim();
+      final registerNumber = _registerNumberController.text.trim();
+      final password = _passwordController.text.trim();
 
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
+      try {
+        // Send registration data to the server
+        final response = await _httpConnector.registerStudent(
+
+          registerNumber,
+          username,
+          password,
         );
-      });
+
+        // Handle successful registration
+        if (response['status'] == 'success') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration Successful!')),
+          );
+
+          // Navigate to Login Page after successful registration
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          });
+        } else {
+          // Show error message if registration fails
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Registration failed: ${response['message']}')),
+          );
+        }
+      } catch (e) {
+        // Handle error if the server call fails
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed: $e')),
+        );
+      }
     }
   }
 

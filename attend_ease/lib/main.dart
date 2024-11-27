@@ -1,13 +1,12 @@
 import 'package:attend_ease/HTTP_Request/Http_connector.dart';
 import 'package:attend_ease/detail_page_param.dart';
 import 'package:flutter/material.dart';
-// import 'detailPage.dart';
 import 'profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MaterialApp(
-      home: MyHome(),
-    ));
+  home: MyHome(),
+));
 
 class MyHome extends StatefulWidget {
   const MyHome({super.key});
@@ -22,76 +21,32 @@ class HomeState extends State<MyHome> {
   @override
   void initState() {
     super.initState();
-    // Check if the user has an active session
     _checkSession();
-    super.initState();
-    subjects = initializeSubjects(); // Initialize subjects
-
   }
 
-  // Check if the auth token exists in shared preferences
   Future<void> _checkSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      // regno = prefs.getString('regno');
+      // Initialize regno here if needed
     });
   }
 
-  late Future<List<Map<String, dynamic>>> subjects;
-  
   Future<List<Map<String, dynamic>>> initializeSubjects() async {
     HttpConnector conn = HttpConnector();
     try {
       List<Map<String, dynamic>> subs = await conn.fetchStudentSubjects(regno.toString());
 
-      // Calculate missedClasses
       for (var subject in subs) {
         int contactHours = subject['contactHours'] ?? 0;
         int hoursAttended = subject['hoursAttended'] ?? 0;
         subject['missedClasses'] = contactHours - hoursAttended;
       }
 
-      return subs; // Return the list
+      return subs;
     } catch (e) {
       throw Exception('Failed to load subjects: $e');
     }
   }
-
-
-
-
-  // final List<Map<String, dynamic>> subjects = [
-  //   {
-  //     'subjectName': 'Mathematics',
-  //     'contactHours': 30,
-  //     'hoursAttended': 20,
-  //     'missedClasses': 10,
-  //   },
-  //   {
-  //     'subjectName': 'Physics',
-  //     'contactHours': 25,
-  //     'hoursAttended': 18,
-  //     'missedClasses': 7,
-  //   },
-  //   {
-  //     'subjectName': 'Chemistry',
-  //     'contactHours': 28,
-  //     'hoursAttended': 22,
-  //     'missedClasses': 6,
-  //   },
-  //   {
-  //     'subjectName': 'Biology',
-  //     'contactHours': 32,
-  //     'hoursAttended': 10,
-  //     'missedClasses': 6,
-  //   },
-  //   {
-  //     'subjectName': 'English',
-  //     'contactHours': 20,
-  //     'hoursAttended': 18,
-  //     'missedClasses': 2,
-  //   },
-  // ];
 
   double calculateAttendancePercentage(int attend, int total) {
     return (attend / total) * 100;
@@ -99,7 +54,6 @@ class HomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
-    initializeSubjects();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -119,144 +73,138 @@ class HomeState extends State<MyHome> {
           ),
         ],
       ),
-      backgroundColor: Colors.grey[900], // Slightly lighter than black
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (var subject in subjects)
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SubDetailedPage_Param(
-                        subject: subject,
+      backgroundColor: Colors.grey[900],
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: initializeSubjects(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text(
+                'No subjects found',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          } else {
+            final subjects = snapshot.data!;
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var subject in subjects)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SubDetailedPage_Param(
+                              subject: subject,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[700],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Stack(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Subject: ${subject['subjectName']}',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        '${subject['contactHours']} Total',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      Text(
+                                        '${subject['hoursAttended']} Attended',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      Text(
+                                        '${subject['missedClasses']} Missed',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        value: calculateAttendancePercentage(
+                                            subject['hoursAttended'],
+                                            subject['contactHours']) /
+                                            100,
+                                        strokeWidth: 10,
+                                        backgroundColor: Colors.grey[400],
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          getColorBasedOnPercentage(
+                                            calculateAttendancePercentage(
+                                                subject['hoursAttended'],
+                                                subject['contactHours']),
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          '${calculateAttendancePercentage(subject['hoursAttended'], subject['contactHours']).toStringAsFixed(1)}%',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[700], // Improved box background color
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Stack(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Text Information
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Subject: ${subject['subjectName']}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white, // High contrast text
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '${subject['contactHours']} Total',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[300], // Softer white
-                                  ),
-                                ),
-                                Text(
-                                  '${subject['hoursAttended']} Attended',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[300],
-                                  ),
-                                ),
-                                Text(
-                                  '${subject['missedClasses']} Missed',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[300],
-                                  ),
-                                ),
-                                Positioned(
-                                  child: TextButton(
-                                    onPressed: () {
-                                      showReomve(context, subject,
-                                          (subjectToRemove) {
-                                        setState(() {
-                                          subjects.remove(subjectToRemove);
-                                        });
-                                      });
-                                    },
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 30, vertical: 1),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Circular Progress Bar on the right
-                          SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                CircularProgressIndicator(
-                                  value: calculateAttendancePercentage(
-                                          subject['hoursAttended'],
-                                          subject['contactHours']) /
-                                      100,
-                                  strokeWidth: 10,
-                                  backgroundColor: Colors.grey[400],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    getColorBasedOnPercentage(
-                                      calculateAttendancePercentage(
-                                          subject['hoursAttended'],
-                                          subject['contactHours']),
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    '${calculateAttendancePercentage(subject['hoursAttended'], subject['contactHours']).toStringAsFixed(1)}%',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                ],
               ),
-          ],
-        ),
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -287,8 +235,7 @@ class HomeState extends State<MyHome> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor:
-              Colors.grey[850], // Dark but lighter dialog background
+          backgroundColor: Colors.grey[850],
           title: const Text(
             "Add New Subject",
             style: TextStyle(color: Colors.white),
@@ -325,66 +272,33 @@ class HomeState extends State<MyHome> {
           ),
           actions: [
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel',
-                    style: TextStyle(color: Colors.white))),
-            TextButton(
               onPressed: () {
-                setState(() {
-                  subjects.add({
-                    'subjectName': subjectNameController.text,
-                    'subjectCode': subjectCodeController.text,
-                    'contactHours': int.parse(totalHoursController.text),
-                    'hoursAttended': 0,
-                    'missedClasses': 0,
-                  });
-                });
                 Navigator.pop(context);
               },
-              child:
-                  const Text('Submit', style: TextStyle(color: Colors.white)),
+              child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            ),
+            TextButton(
+                onPressed: () {
+                setState(() {
+                // Add logic to update subjects dynamically if needed
+                HttpConnector conn = HttpConnector();
+
+                // Initialize the map
+                Map<String, dynamic> mp = {};
+
+                mp['subjectCode'] = subjectCodeController.text;
+                mp['subjectName'] = subjectNameController.text;
+                mp['contactHours'] = int.parse(totalHoursController.text);
+
+                conn.addSubjectToStudent(regno.toString(), mp);
+                });
+                Navigator.pop(context);
+                },
+              child: const Text('Submit', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
       },
     );
   }
-}
-
-// Remove function with callback support
-void showReomve(BuildContext context, Map<String, dynamic> subject,
-    Function(Map<String, dynamic>) removeSubject) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: Colors.grey[850],
-        title: const Text(
-          "Remove Subject",
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Are you sure you want to remove this subject?',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          TextButton(
-            child: const Text("No", style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          TextButton(
-            child: const Text("Yes", style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              removeSubject(subject);
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      );
-    },
-  );
 }

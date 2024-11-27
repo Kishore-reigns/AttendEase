@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'register.dart';
-
-
+import 'HTTP_Request/Http_connector.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -35,23 +34,38 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _registerNumberController = TextEditingController();
   final _passwordController = TextEditingController();
+  final HttpConnector _httpConnector = HttpConnector();
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
       // Perform login logic here (e.g., check credentials)
-      if (_registerNumberController.text == '12345' &&
-          _passwordController.text == 'password') {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('registerNumber',_registerNumberController.text);
-        // Navigate to Home Page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyHome()),
-        );
-      } else {
-        // Show error if credentials are invalid
+      final regNo = _registerNumberController.text.trim();
+      final password = _passwordController.text.trim();
+      try {
+        // Fetch student details from the server
+        final studentData = await _httpConnector.getStudentByRegNo(regNo);
+        Map<String,dynamic> mp={};
+        mp['password'] = _passwordController.text;
+        if (await _httpConnector.validatePassword(_registerNumberController.text, mp)) {
+          print(await _httpConnector.validatePassword(_registerNumberController.text, mp));
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('registerNumber', regNo);
+
+          // Navigate to Home Page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHome()),
+          );
+        } else {
+          // Show error if the password is incorrect
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid Register Number or Password')),
+          );
+        }
+      } catch (e) {
+        // Handle error if the server call fails
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid Register Number or Password')),
+          SnackBar(content: Text('Login failed: $e')),
         );
       }
     }
