@@ -8,7 +8,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -37,33 +37,30 @@ class _LoginPageState extends State<LoginPage> {
   final HttpConnector _httpConnector = HttpConnector();
 
   void _login() async {
+    print("HIIIIIII");
     if (_formKey.currentState!.validate()) {
-
-
-      if (_registerNumberController.text == '12345' &&
-          _passwordController.text == 'password') {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('registerNumber',_registerNumberController.text);
-        // Navigate to Home Page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyHome()),
-        );
-      } else {
-        // Show error if credentials are invalid
-
+      print("HELLLLOOOO");
       // Perform login logic here (e.g., check credentials)
       final regNo = _registerNumberController.text.trim();
       final password = _passwordController.text.trim();
+      print(regNo + " "+ password);
       try {
         // Fetch student details from the server
         final studentData = await _httpConnector.getStudentByRegNo(regNo);
+        print("-------------------------------------------");
+        print(studentData);
         Map<String,dynamic> mp={};
+
         mp['password'] = _passwordController.text;
+        print("helloo");
+        print(studentData['studentName']);
+
         if (await _httpConnector.validatePassword(_registerNumberController.text, mp)) {
           print(await _httpConnector.validatePassword(_registerNumberController.text, mp));
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString('registerNumber', regNo);
+          print(studentData['studentName']);
+          prefs.setString('name',studentData['studentName']);
 
           // Navigate to Home Page
           Navigator.pushReplacement(

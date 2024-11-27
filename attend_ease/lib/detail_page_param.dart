@@ -11,7 +11,7 @@ class SubDetailedPage_Param extends StatefulWidget {
 
   Map<String, dynamic> subject;
   // Constructor for the StatefulWidget
-  SubDetailedPage_Param({super.key, 
+  SubDetailedPage_Param({super.key,
     required this.subject,
   });
 
@@ -49,9 +49,9 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   double calculateAttendancePercentage() {
     int totalAttended =
-        highlightedDates.values.fold(0, (sum, value) => sum + value[0]);
+    highlightedDates.values.fold(0, (sum, value) => sum + value[0]);
     int contactHours =
-        highlightedDates.values.fold(0, (sum, value) => sum + value[1]);
+    highlightedDates.values.fold(0, (sum, value) => sum + value[1]);
     return contactHours > 0 ? (totalAttended / contactHours) * 100 : 0.0;
   }
 
@@ -119,7 +119,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   void showAddClassDialog(BuildContext context) {
     TextEditingController counterController =
-        TextEditingController(text: counter.toString());
+    TextEditingController(text: counter.toString());
     DateTime? selectedDate;
     String attendanceStatus = 'Attended'; // Default value
     int hoursAttended = 0;
@@ -271,7 +271,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   void showPartialAttendanceDialog(BuildContext context, Function(int) onSave) {
     TextEditingController attendedCounterController =
-        TextEditingController(text: '0');
+    TextEditingController(text: '0');
 
     showDialog(
       context: context,
@@ -285,7 +285,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                 style: TextStyle(color: Colors.white),
               ),
               content:
-                  counterCreator(setDialogState, attendedCounterController),
+              counterCreator(setDialogState, attendedCounterController),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -301,7 +301,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content:
-                              Text('Attended classes must be greater than 0'),
+                          Text('Attended classes must be greater than 0'),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -371,7 +371,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
               backgroundColor: foregroundColor,
 
               title:
-                  const Text('Remove Class', style: TextStyle(color: Colors.white)),
+              const Text('Remove Class', style: TextStyle(color: Colors.white)),
 
 
 
@@ -531,7 +531,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
             if (highlightedDates[normalizedDate]?[0] == 0) {
               circleColor = Colors.red;
             } else if (((highlightedDates[normalizedDate]?[0])! -
-                    (highlightedDates[normalizedDate]![1])) ==
+                (highlightedDates[normalizedDate]![1])) ==
                 0)
               circleColor = Colors.green;
             else

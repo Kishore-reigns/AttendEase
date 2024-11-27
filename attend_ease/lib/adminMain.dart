@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'HTTP_Request/Http_connector.dart';
 
 void main() => runApp(const MaterialApp(
-      home: MyHome(),
-    ));
+  home: MyHome(),
+));
 
 class MyHome extends StatefulWidget {
   @override
@@ -72,8 +72,8 @@ class HomeState extends State<MyHome> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => adminDetail(
-                          // Pass subject details here
-                          ),
+                        // Pass subject details here
+                      ),
                     ),
                   );
                 },
@@ -81,7 +81,7 @@ class HomeState extends State<MyHome> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(10),

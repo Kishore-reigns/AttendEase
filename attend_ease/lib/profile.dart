@@ -16,10 +16,12 @@ class _ProfileState extends State<Profile>{
   String img  =  "https://img.lovepik.com/photo/48006/3554.jpg_wh300.jpg";
   final ImagePicker _picker = ImagePicker();
 
-  void _getSessionData() async{
+  void _getSessionData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      registerNumber = prefs.getString('registerNumber')??"00000";
+      // Retrieve the student's name and register number from SharedPreferences
+      name = prefs.getString('name') ?? "Your Name";
+      registerNumber = prefs.getString('registerNumber') ?? "00000";
     });
   }
   @override
@@ -38,10 +40,6 @@ class _ProfileState extends State<Profile>{
           content: TextField(
             controller: nameController,
             decoration: const InputDecoration(hintText: "Enter new name"),
-
-
-
-
           ),
           actions: [
             TextButton(

@@ -42,7 +42,7 @@ class HomeState extends State<MyHome> {
       // Any subjects added will now be displayed
 
       // Initialize regno here if needed
-     // regno = prefs.getString('registerNumber');
+      // regno = prefs.getString('registerNumber');
 
     });
   }
@@ -98,7 +98,7 @@ class HomeState extends State<MyHome> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Error: ${snapshot.error}',
+                'ADD SUBJECTS',
                 style: const TextStyle(color: Colors.white),
               ),
             );

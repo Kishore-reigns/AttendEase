@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpConnector {
+  //192.168.1.3
   //192.168.1.3
   final String baseUrl = 'http://192.168.1.3:6968/students';
 
@@ -37,6 +39,21 @@ class HttpConnector {
       throw Exception('Error fetching all students: $e');
     }
   }
+
+  // Function to fetch student name and save it in SharedPreferences
+  Future<void> fetchAndSaveStudentName(String regNo) async {
+    try {
+      final studentData = await getStudentByRegNo(regNo);
+      final String studentName = studentData['name'];
+
+      // Save the student's name to SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('studentName', studentName);
+    } catch (e) {
+      print("Error fetching and saving student name: $e");
+    }
+  }
+
 
   Future<Map<String, dynamic>> createStudent(Map<String, dynamic> studentData) async {
     final url = Uri.parse('$baseUrl/create');
@@ -189,6 +206,41 @@ class HttpConnector {
     } catch (e) {
       print('Error validating password: $e');
       return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> getSubjectByCode(String regno, String subCode) async {
+    final url = Uri.parse('$baseUrl/Student/$regno/subject/$subCode');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // If the server returns a 200 OK response, parse the JSON
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        // If the server does not return a 200 OK response, throw an error
+        throw Exception('Failed to load subject data');
+      }
+    } catch (e) {
+      // Handle any exceptions
+      throw Exception('Error: $e');
+    }
+  }
+
+  Future<bool> deleteClass(String regNo, String code, String date) async{
+    final url = Uri.parse('$baseUrl/Student/$regNo/subject/$code/class/$date');
+    try{
+      final response = await http.delete(url);
+      if(response.statusCode == 200){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    catch(e){
+      throw Exception("Dubug:$e");
     }
   }
 

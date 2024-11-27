@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart'; // Import login page if needed
 import 'HTTP_Request/Http_connector.dart';
 
@@ -33,20 +34,24 @@ class _RegisterPageState extends State<RegisterPage> {
           'password': password,
         };
         final response = await _httpConnector.createStudent(studentData);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+
 
         // Handle successful registration
         // if (response['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration Successful!')),
-          );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration Successful!')),
+        );
 
-          // Navigate to Login Page after successful registration
-          Future.delayed(const Duration(seconds: 1), () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
-          });
+        // Navigate to Login Page after successful registration
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        });
         // } else {
         //   // Show error message if registration fails
         //   ScaffoldMessenger.of(context).showSnackBar(
