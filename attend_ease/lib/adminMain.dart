@@ -14,7 +14,7 @@ class MyHome extends StatefulWidget {
 }
 
 class HomeState extends State<MyHome> {
-  HttpConnector conn = new HttpConnector();
+  HttpConnector conn = HttpConnector();
 
   late Map<String, dynamic> temp;
 

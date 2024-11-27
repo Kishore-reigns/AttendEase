@@ -1,6 +1,3 @@
-import 'package:attend_ease/adminMain.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -13,7 +10,7 @@ class SubDetailedPage_Param extends StatefulWidget {
 
   Map<String, dynamic> subject;
   // Constructor for the StatefulWidget
-  SubDetailedPage_Param({
+  SubDetailedPage_Param({super.key, 
     required this.subject,
   });
 
@@ -26,8 +23,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
   int counter = 0; // This is for the class counter in the dialog
 
   final Color col = Colors.grey.withOpacity(0.7);
-  final Color backgroundColor = Color.fromRGBO(18, 18, 18, 1);
-  final Color foregroundColor = Color.fromRGBO(30, 30, 30, 1);
+  final Color backgroundColor = const Color.fromRGBO(18, 18, 18, 1);
+  final Color foregroundColor = const Color.fromRGBO(30, 30, 30, 1);
 
   // final Map<DateTime, List<String>> highlightedDates = {
   //   DateTime(2023, 6, 1): ['Attended'],
@@ -75,7 +72,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   Container createFloatingButtonsDouble(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: [
           SizedBox(width: screenWidth / 20 + 3.0),
@@ -86,7 +83,6 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
               onPressed: () {
                 showRemoveClassDialog(context);
               },
-              child: const Text('Remove Class', style: TextStyle(fontSize: 18)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -94,9 +90,10 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                   borderRadius: BorderRadius.circular(13),
                 ),
               ),
+              child: const Text('Remove Class', style: TextStyle(fontSize: 18)),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           SizedBox(
             height: 50,
             width: screenWidth / 2.30,
@@ -104,7 +101,6 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
               onPressed: () {
                 showAddClassDialog(context);
               },
-              child: const Text('Add Class', style: TextStyle(fontSize: 18)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
@@ -112,6 +108,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                   borderRadius: BorderRadius.circular(13),
                 ),
               ),
+              child: const Text('Add Class', style: TextStyle(fontSize: 18)),
             ),
           ),
         ],
@@ -133,7 +130,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: foregroundColor,
-              title: Text(
+              title: const Text(
                 'Add Class',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
@@ -157,21 +154,21 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                         });
                       }
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
                     child: Text(
                       selectedDate == null
                           ? 'Select Date'
                           : '${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}',
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 10),
                   DropdownButton<String>(
                     value: attendanceStatus,
                     dropdownColor: backgroundColor,
-                    items: [
+                    items: const [
                       DropdownMenuItem(
                         value: 'Attended',
                         child: Text(
@@ -214,14 +211,14 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel', style: TextStyle(color: Colors.red)),
+                  child: const Text('Cancel', style: TextStyle(color: Colors.red)),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     if (selectedDate == null || counterController.text == '0') {
                       // Show error message
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text(
                               'Please select a date and number of classes'),
                           backgroundColor: Colors.red,
@@ -261,7 +258,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       });
                     }
                   },
-                  child: Text('Add'),
+                  child: const Text('Add'),
                 ),
               ],
             );
@@ -282,7 +279,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: foregroundColor,
-              title: Text(
+              title: const Text(
                 'Enter No. of Classes Attended',
                 style: TextStyle(color: Colors.white),
               ),
@@ -293,7 +290,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel', style: TextStyle(color: Colors.red)),
+                  child: const Text('Cancel', style: TextStyle(color: Colors.red)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -301,7 +298,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                         int.tryParse(attendedCounterController.text) ?? 0;
                     if (attended <= 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content:
                               Text('Attended classes must be greater than 0'),
                           backgroundColor: Colors.red,
@@ -312,7 +309,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                     onSave(attended);
                     Navigator.of(context).pop();
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             );
@@ -343,7 +340,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text(
+                      child: const Text(
                         'Cancel',
                         style: TextStyle(color: Colors.red),
                       )),
@@ -351,7 +348,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text(
+                      child: const Text(
                         'Add',
                         style: TextStyle(color: Colors.white),
                       ))
@@ -371,7 +368,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
             return AlertDialog(
               backgroundColor: foregroundColor,
               title:
-                  Text('Remove Class', style: TextStyle(color: Colors.white)),
+                  const Text('Remove Class', style: TextStyle(color: Colors.white)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -387,7 +384,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                       },
                       title: Text(
                         '${date.toIso8601String().split('T').first} - ${highlightedDates[date]?.first ?? ''}',
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                       activeColor: Colors.red,
                     );
@@ -399,7 +396,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel', style: TextStyle(color: Colors.red)),
+                  child: const Text('Cancel', style: TextStyle(color: Colors.red)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -415,7 +412,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
                     print('Send removed dates to backend: $datesToRemove');
                     Navigator.of(context).pop();
                   },
-                  child: Text('Remove'),
+                  child: const Text('Remove'),
                 ),
               ],
             );
@@ -438,17 +435,17 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
             });
           },
         ),
-        Container(
+        SizedBox(
           width: 130,
           child: TextField(
             controller: counterController,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'No. of Classes',
             ),
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             onChanged: (value) {
               setDialogState(() {
                 counter = int.tryParse(value) ?? 0;
@@ -461,7 +458,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          style: ButtonStyle(),
+          style: const ButtonStyle(),
           onPressed: () {
             setDialogState(() {
               counter++;
@@ -487,9 +484,9 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
           if (highlightedDates.containsKey(normalizedDate)) {
             Color circleColor = Colors.green;
 
-            if (highlightedDates[normalizedDate]?[0] == 0)
+            if (highlightedDates[normalizedDate]?[0] == 0) {
               circleColor = Colors.red;
-            else if (((highlightedDates[normalizedDate]?[0])! -
+            } else if (((highlightedDates[normalizedDate]?[0])! -
                     (highlightedDates[normalizedDate]![1])) ==
                 0)
               circleColor = Colors.green;
@@ -555,7 +552,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   Container createCircleProgress() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       height: 180,
       child: Center(
         child: SizedBox(
@@ -594,8 +591,8 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   Container subjectDetailsContainer() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      padding: EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: col,
@@ -605,19 +602,19 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
         children: [
           Text(
             'Subject Code: ${widget.subject['subjectCode']}',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: const TextStyle(fontSize: 20, color: Colors.white),
           ),
           Text(
             'Subject Name: ${widget.subject['subjectName']}',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: const TextStyle(fontSize: 20, color: Colors.white),
           ),
           Text(
             'Classes Conducted: ${widget.subject['contactHours']}',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: const TextStyle(fontSize: 20, color: Colors.white),
           ),
           Text(
             'Classes Attended: ${widget.subject['hoursAttended']}',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: const TextStyle(fontSize: 20, color: Colors.white),
           ),
           redTextBoxContainer('Classes Missed: '),
         ],
@@ -627,22 +624,22 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   Container redTextBoxContainer(String textToFill) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
       decoration: BoxDecoration(
-        color: Color.fromARGB(100, 196, 14, 14),
+        color: const Color.fromARGB(100, 196, 14, 14),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
         '$textToFill${widget.subject['missedClasses']}',
-        style: TextStyle(color: Colors.white, fontSize: 20),
+        style: const TextStyle(color: Colors.white, fontSize: 20),
       ),
     );
   }
 
   Container createAppBar() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: col,
         borderRadius: BorderRadius.circular(12),
@@ -650,7 +647,7 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
       child: Text(
         '${widget.subject['subjectName']}',
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 30,
         ),
@@ -660,11 +657,11 @@ class _SubDetailedPage_ParamState extends State<SubDetailedPage_Param> {
 
   Color getColorBasedOnPercentage(double percentage) {
     if (percentage >= 75) {
-      return Color.fromRGBO(51, 255, 13, 1);
+      return const Color.fromRGBO(51, 255, 13, 1);
     } else if (percentage >= 50) {
-      return Color.fromRGBO(255, 176, 9, 1);
+      return const Color.fromRGBO(255, 176, 9, 1);
     } else {
-      return Color.fromRGBO(255, 31, 31, 1);
+      return const Color.fromRGBO(255, 31, 31, 1);
     }
   }
 }

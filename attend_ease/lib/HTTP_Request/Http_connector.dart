@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class HttpConnector {
-  final String baseUrl = 'http://localhost:6969/students';
+  //192.168.1.3
+  final String baseUrl = 'http://192.168.1.3:6968/students';
 
   Future<Map<String, dynamic>> getStudentByRegNo(String regNo) async {
     final url = Uri.parse('$baseUrl/Student/$regNo');

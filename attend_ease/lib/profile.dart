@@ -1,8 +1,9 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
+  const Profile({super.key});
+
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -18,15 +19,15 @@ class _ProfileState extends State<Profile> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Edit Name"),
+          title: const Text("Edit Name"),
           content: TextField(
             controller: nameController,
-            decoration: InputDecoration(hintText: "Enter new name"),
+            decoration: const InputDecoration(hintText: "Enter new name"),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () {
@@ -35,7 +36,7 @@ class _ProfileState extends State<Profile> {
                 });
                 Navigator.pop(context);
               },
-              child: Text("Save"),
+              child: const Text("Save"),
             ),
           ],
         ));
@@ -48,15 +49,15 @@ class _ProfileState extends State<Profile> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Edit Register Number"),
+        title: const Text("Edit Register Number"),
         content: TextField(
           controller: registerController,
-          decoration: InputDecoration(hintText: "Enter new register number"),
+          decoration: const InputDecoration(hintText: "Enter new register number"),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
           ),
           ElevatedButton(
             onPressed: () {
@@ -65,7 +66,7 @@ class _ProfileState extends State<Profile> {
               });
               Navigator.pop(context);
             },
-            child: Text("Save"),
+            child: const Text("Save"),
           ),
         ],
       ),
@@ -94,15 +95,15 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Profile",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.grey[900],
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -111,94 +112,94 @@ class _ProfileState extends State<Profile> {
                 radius: 50,
                 backgroundImage: NetworkImage(img),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Text(
                 name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Text(
                 registerNumber,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white70,
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               SizedBox(
                 width: double.infinity, // Full width buttons
                 height: 60,
                 child: ElevatedButton(
                   onPressed: _editProfilePicture,
-                  child: Text(
-                    'Edit Profile Picture',
-                    style: TextStyle(color: Colors.white),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[900],
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  child: const Text(
+                    'Edit Profile Picture',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-              SizedBox(height: 10), // Space between buttons
+              const SizedBox(height: 10), // Space between buttons
 
               SizedBox(
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
                   onPressed: _editName,
-                  child: Text(
-                    'Edit Profile Name',
-                    style: TextStyle(color: Colors.white),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[900],
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  child: const Text(
+                    'Edit Profile Name',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               SizedBox(
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
                   onPressed: _editRegisterNumber,
-                  child: Text(
-                    'Edit Register Number',
-                    style: TextStyle(color: Colors.white),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[900],
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  child: const Text(
+                    'Edit Register Number',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
